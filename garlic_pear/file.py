@@ -60,6 +60,7 @@ class TrackedFile(File):
     def path(self) -> pathlib.Path:
         return self.__path
 
+
     def last_modified(self):
         return self.path().stat().st_mtime
 

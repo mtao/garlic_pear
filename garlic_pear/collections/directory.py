@@ -1,12 +1,13 @@
-from ..directory import TrackedDirectory,SourceDirectory
-from ..file import SourceFile
-from .source import Source
+from ...directory import TrackedDirectory,SourceDirectory
+from ...file import SourceFile
+from ..source import Source
 import pathlib
 
 
 
 
-class DirectorySource(Source):
+
+class DirectoryCollection(Collection):
     def __init__(self, path: pathlib.Path):
         path = pathlib.Path(path)
         assert path.is_dir()
@@ -28,9 +29,9 @@ class DirectorySource(Source):
         if not child_path.exists():
             raise FileNotFoundError(child_path)
         elif child_path.is_dir():
-            return SourceDirectory(self,cp)
+            return Directory(self,cp)
         elif child_path.is_file():
-            return SourceFile(self,cp)
+            return File(self,cp)
         else:
             raise RuntimeError("unknown file type")
 

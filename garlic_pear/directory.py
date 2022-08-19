@@ -1,7 +1,7 @@
 import pathlib
 from .path import Path
 from .file import *
-from typing import List
+from typing import List,Dict
 
 
 
@@ -16,7 +16,6 @@ class Directory(Path):
 
     def all_entries(self) -> List[Path]:
         return list(_ for _ in self.all_entries_iter())
-
     def all_entries_iter(self):
         raise NotImplementedError()
 
@@ -38,6 +37,7 @@ class SourceDirectory(Directory):
     def last_modified(self):
         return self.__source.last_modified(self.__source_path)
 
+
 # a representation of a directory tracked
 class TrackedDirectory(Directory):
     def __init__(self, path):
@@ -50,7 +50,11 @@ class TrackedDirectory(Directory):
     def path(self) -> pathlib.Path:
         return self.__path
 
-    def relative_path(self,path) -> str:
+    def relative_path(self,path) -> pathlib.Path:
+        if isinstance(path, TrackedFile):
+            path = path.path()
+        elif isinstance(path, TrackedDirectory):
+            path = path.path()
         return path.relative_to(self.path())
 
     def last_modified(self):

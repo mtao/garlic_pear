@@ -8,3 +8,6 @@ class Source(Directory):
         raise NotImplementedError()
 
 
+    def canonical_entry_dict(self) -> Dict[pathlib.Path, Path]:
+        raise NotImplementedError()
+

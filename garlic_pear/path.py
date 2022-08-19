@@ -1,32 +1,32 @@
 
 import pathlib
+import datetime 
 
 
 
-# a file
+# a file. it can be compared using its last modified date
 class Path:
-
-    
+    # returns a pathlib.Path for a file, using our .path() function if
+    # available
     @staticmethod
     def __get_path(pathlike) -> pathlib.Path :
         if type(pathlike) is pathlib.Path:
-            return path_or_file
+            return pathlike
         elif issubclass(pathlike, Path):
-            return  other_file.path()
+            return  pathlike.path()
         else:
             return pathlib.Path(pathlike)
 
 
-
-
+    # a pathlib.Path path if available
     def path(self) -> pathlib.Path:
         raise NotImplementedError()
-    def last_modified(self):
+    def last_modified(self) -> datetime.datetime:
         raise NotImplementedError()
 
 
     def __lt__(self, other):
-        return str(self) < str(other)
+        return self.last_modified() < other.last_modified()
 
 
 
