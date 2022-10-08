@@ -5,7 +5,7 @@ from garlic_pear.utils import make_embedded_file
 import os
 
 
-from garlic_pear.source.directory import DirectorySource
+from garlic_pear.collections.directory import DirectoryCollection
 
 
 

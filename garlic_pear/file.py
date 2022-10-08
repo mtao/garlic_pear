@@ -30,6 +30,12 @@ class File(Path):
         utils.diff(self.path(),other_path)
 
 
+    # if a file exists then returns the mtime, otherwise None
+    def last_modified(self):
+        if self.__path.exists():
+            return None
+        else:
+            return self.path().stat().st_mtime
 
 
 
@@ -61,6 +67,4 @@ class TrackedFile(File):
         return self.__path
 
 
-    def last_modified(self):
-        return self.path().stat().st_mtime
 
