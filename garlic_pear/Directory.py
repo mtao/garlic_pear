@@ -1,12 +1,20 @@
 import pathlib
 from .path import Path
+from .file import File
 from .file import *
 from typing import List,Dict
 
 
 
-# a file
-class Directory(Path):
+# directory is a special file whose contents can be multiple files
+class Directory(File):
+
+
+    @staticmethod
+
+    def __init__(self, path, manager):
+        super().__init__(path,manager)
+
 
     def entries(self) -> List[Path]:
         return list(_ for _ in self.entries_iter())
@@ -19,6 +27,41 @@ class Directory(Path):
     def all_entries_iter(self):
         raise NotImplementedError()
 
+
+    def diff(self, other_file: File):
+        if isinstance(other_file, Directory):
+            entries = self.entries()
+            oentries = other_file.entries()
+
+            keys = entries.keys()
+            okeys = oentries.keys()
+
+            all_keys = keys.union(okeys)
+
+            only_me = set()
+            only_other = set()
+            both = set()
+            for key in all_keys:
+                me = key in entries
+                other = key in oentries
+
+                if me and other:
+                    both.append(key)
+                elif me:
+                    only_me.append(key)
+                else:
+                    only_other.append(key)
+
+            
+            for path in both:
+
+
+
+
+
+
+        other_path = File.__get_path(other_file)
+        utils.diff(self.path(),other_path)
 
 
 

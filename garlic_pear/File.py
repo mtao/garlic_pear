@@ -2,14 +2,17 @@
 import pathlib
 from .utils.diff import diff
 from .path import Path
+from .utils.diff import DiffEnum,Update
+from typing import Tuple
 
 
 
 # a file
 class File(Path):
 
-    def __init__(self, path):
+    def __init__(self, path, manager):
         self.__path = pathlib.Path(path)
+        self.__manager = manager
 
     def path(self) -> pathlib.Path:
         raise NotImplementedError()
@@ -18,16 +21,27 @@ class File(Path):
     def __get_path(path_or_file) -> pathlib.Path :
         if type(path_or_file) is pathlib.Path:
             return path_or_file
-        elif issubclass(other_file, File):
-            return  other_file.path()
+        elif issubclass(path_or_file, File):
+            return  path_or_file.path()
         else:
             return pathlib.Path(path_or_file)
 
 
 
-    def diff(self, other_file):
+    def diff(self, other_file: File) -> Update:
         other_path = File.__get_path(other_file)
-        utils.diff(self.path(),other_path)
+
+        # TODO: checking the relative age between two files seems like a huge
+        # pain in the ass
+        #lastmod = self.last_modified()
+        #olastmod = other.last_modified()
+
+
+        on_filesystem = self.on_filesystem()
+        other_on_filesystem = other.on_filesystem()
+
+        if on_filesystem and other_on_filesystem:
+            utils.path_diff(self.path(),other_path.path())
 
 
     # if a file exists then returns the mtime, otherwise None

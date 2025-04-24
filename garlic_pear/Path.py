@@ -6,6 +6,7 @@ import datetime
 
 # a file. it can be compared using its last modified date
 class Path:
+    # TODO: remove this?
     # returns a pathlib.Path for a file, using our .path() function if
     # available
     @staticmethod
