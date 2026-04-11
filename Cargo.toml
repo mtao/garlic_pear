@@ -1,3 +1,10 @@
 [package]
 name = "garlic_pear"
 version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "1"
+thiserror = "2"
