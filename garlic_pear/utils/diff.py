@@ -1,7 +1,8 @@
 from enum import Enum
 import pathlib
-from typing import Tuple,Map
-from ..path import Path
+from typing import Tuple,Dict
+from ..Path import Path
+from ..Directory import Directory
 
 
 class DiffEnum(Enum):
@@ -15,6 +16,7 @@ class UpdateType(Enum):
     Deleted = 2
     Modified = 3
     Unchanged = 4
+    Uncomparable = 5 # turned into a file or directory
 
 
 class Update:
@@ -27,7 +29,7 @@ class Update:
 
 
 class DiffReport:
-    def __init__(self, updates: Map[Path,Tuple[DiffEnum,Update]]):
+    def __init__(self, updates: Dict[Path,Tuple[DiffEnum,Update]]):
         self.left = dict()
         self.right = dict()
         self.unchanged = set()
@@ -57,6 +59,18 @@ class DiffReport:
 
 
 
+def diff_dir(left: Path, right: Path):
+    a_is_dir = isinstance(left,Directory)
+    b_is_dir = isinstance(right,Directory)
+    return _diff(left,right,'.')
 
+
+
+def diff_dir(left: Path, right: Path):
+    a_is_dir = isinstance(left,Directory)
+    b_is_dir = isinstance(right,Directory)
+    if a_is_dir && b_is_dir:
+
+    return _diff(left,right,'.')
 
 

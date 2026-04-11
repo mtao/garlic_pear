@@ -1,1 +1,2 @@
 from .make_embedded_file import make_embedded_file
+from .diff import diff
