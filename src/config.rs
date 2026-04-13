@@ -19,7 +19,7 @@ pub struct GlobalConfig {
     pub backup: Option<PathBuf>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone, Copy)]
 #[serde(rename_all = "lowercase")]
 pub enum Strategy {
     Symlink,
