@@ -23,6 +23,8 @@ type Walker struct {
 	Ignores []string
 }
 
+var DefaultIgnores = []string{".git"}
+
 func (w *Walker) doesIgnore(str string) bool {
 	return slices.Contains(w.Ignores, str)
 }
@@ -30,7 +32,7 @@ func (w *Walker) doesIgnore(str string) bool {
 func (w *Walker) walkFrom(root string, cur string) ([]Entry, error) {
 	info, err := os.Stat(cur)
 	if err != nil {
-		return nil, fmt.Errorf("stat %s: %w", cur, err)
+		return nil, err
 	}
 	var entries []Entry
 	var kind EntryKind
@@ -39,7 +41,7 @@ func (w *Walker) walkFrom(root string, cur string) ([]Entry, error) {
 
 		dirEntries, err := os.ReadDir(cur)
 		if err != nil {
-			return nil, fmt.Errorf("read dir %s: %w", cur, err)
+			return nil, fmt.Errorf("read dir: %w", err)
 		}
 		for _, dirEntry := range dirEntries {
 			if w.doesIgnore(dirEntry.Name()) {
