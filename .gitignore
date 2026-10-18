@@ -1,0 +1,15 @@
+# Binary produced by `go build`
+/garlic_pear
+
+# Test binary from `go test -c`
+*.test
+
+# Coverage output
+*.out
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Vendored dependencies
+/vendor/
