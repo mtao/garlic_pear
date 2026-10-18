@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io/fs"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -182,5 +183,40 @@ func TestStrategyUnmarshalText(t *testing.T) {
 				t.Errorf("got %q, want %q", s, tt.want)
 			}
 		})
+	}
+}
+
+func TestLoadConfigIgnore(t *testing.T) {
+	path := writeConfig(t, `
+[global]
+config_dir = "c"
+default_strategy = "symlink"
+
+[[file]]
+name = "with"
+source = "a"
+target = "/t/a"
+ignore = ["themes", "*.swp"]
+
+[[file]]
+name = "without"
+source = "b"
+target = "/t/b"
+`)
+
+	cfg, err := LoadConfig(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cfg.File) != 2 {
+		t.Fatalf("got %d file entries, want 2", len(cfg.File))
+	}
+
+	if got, want := cfg.File[0].Ignore, []string{"themes", "*.swp"}; !slices.Equal(got, want) {
+		t.Errorf("entry with ignore = %v, want %v", got, want)
+	}
+	// Absent key is a nil slice, which mergeIgnores treats as "no extras".
+	if cfg.File[1].Ignore != nil {
+		t.Errorf("entry without ignore = %v, want nil", cfg.File[1].Ignore)
 	}
 }

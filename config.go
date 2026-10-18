@@ -21,6 +21,7 @@ type FileEntry struct {
 	Source   string    `toml:"source"`
 	Target   string    `toml:"target"`
 	Strategy *Strategy `toml:"strategy"`
+	Ignore   []string  `toml:"ignore"`
 }
 
 func LoadGlobalConfig(path string) (*GlobalConfig, error) {

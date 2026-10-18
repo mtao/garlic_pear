@@ -7,7 +7,23 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 )
+
+func mergeIgnores(defaults, extra []string) []string {
+	return slices.Concat(defaults, extra)
+}
+
+func resolveConfigDir(configFile, configDir string) (string, error) {
+	configDir, err := ExpandPath(configDir)
+	if err != nil {
+		return "", err
+	}
+	if !filepath.IsAbs(configDir) {
+		configDir = filepath.Join(filepath.Dir(configFile), configDir)
+	}
+	return configDir, nil
+}
 
 func main() {
 	var configPath string
@@ -21,21 +37,31 @@ func main() {
 		os.Exit(2)
 	}
 
+	configPath, err := ExpandPath(configPath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
 	config, err := LoadConfig(configPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	walker := Walker{Ignores: DefaultIgnores}
-
 	var failed bool
-	configDir := filepath.Join(filepath.Dir(configPath), config.Global.ConfigDir)
+
+	configDir, err := resolveConfigDir(configPath, config.Global.ConfigDir)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	switch args[0] {
 	case "status":
 		for _, entry := range config.File {
 
+			walker := Walker{Ignores: mergeIgnores(DefaultIgnores, entry.Ignore)}
 			srcRoot := filepath.Join(configDir, entry.Source)
 			tgtRoot, err := ExpandPath(entry.Target)
 			if err != nil {
